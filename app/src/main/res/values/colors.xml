@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="icon_tint">#1f000000</color>
+    <color name="background">#1f000000</color>
+    <color name="content_background">#ffffff</color>
+    <color name="theme_primary">#279d25</color>
+    <color name="accent">#69bb6c</color>
+    <color name="theme_dark_primary">#4cb050</color>
+    <color name="theme_light_primary">#6AB8F7</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="body_text_1">#000000</color>
+    <color name="body_text_2">#8a000000</color>
+    <color name="body_text_3">#60000000</color>
+    <color name="body_text_disabled">#44000000</color>
+
+    <color name="body_text_1_inverse">#deffffff</color>
+    <color name="body_text_2_inverse">#8affffff</color>
+
+    <color name="tint">#2196F3</color>
+
+    <color name="navdrawer_background">#ffffffff</color>
+    <color name="navdrawer_text_color">@color/body_text_1</color>
+    <color name="compose_text_color">@color/body_text_1</color>
+    <color name="navdrawer_text_color_selected">@color/theme_primary</color>
+    <color name="navdrawer_icon_tint">#888</color>
+    <color name="compose_hint_text">#888</color>
+    <color name="navdrawer_icon_tint_selected">@color/theme_primary</color>
+
+    <color name="dark_divider">#32000000</color>
+    <color name="divider">#B6B6B6</color>
+    <color name="black">#000000</color>
+
+</resources>

@@ -1,0 +1,59 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/theme_primary</item>
+        <item name="colorPrimaryDark">@color/theme_dark_primary</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="buttonStyle">@style/ButtonDark</item>
+        <item name="editTextStyle">@style/EditTextDark</item>
+        <item name="android:textColorHint">@android:color/white</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItemDark</item>
+
+    </style>
+
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="ButtonDark" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_dark</item>
+        <item name="android:textColor">@drawable/button_text_color_light</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+
+    </style>
+
+    <style name="EditTextDark" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="SpinnerItemDark" parent="Widget.AppCompat.TextView.SpinnerItem">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <!-- Dividers -->
+    <style name="vertical_divider">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@android:color/darker_gray</item>
+    </style>
+
+    <style name="horizontal_divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@android:color/darker_gray</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+</resources>
