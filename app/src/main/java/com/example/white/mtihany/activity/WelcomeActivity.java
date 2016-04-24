@@ -4,14 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.white.mtihany.R;
 import com.example.white.mtihany.fragments.WelcomeActivityFragment;
 import com.example.white.mtihany.utility.ExternalStorageUtils;
+import com.example.white.mtihany.utility.PrefSettings;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -19,7 +22,19 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setupActionBar();
         ExternalStorageUtils.createAppDirectories(getApplicationContext());
+
+
+
+       /* if (!PrefSettings.isPressed(getApplicationContext())) {
+            Intent intent = new Intent(this, BaseActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }*/
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment);
 
         if (fragment == null) {
@@ -27,7 +42,17 @@ public class WelcomeActivity extends AppCompatActivity {
             transaction.replace(R.id.fragment, new WelcomeActivityFragment()).commit();
         }
 
+
          }
+
+    private void setupActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            // Show the Up button in the action bar.
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -52,6 +77,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
     //Quick Setup Button Clicked
     public void quickSetup (View  view){
+        PrefSettings.markPressedin(this, false);
         startActivity(new Intent(this, MainActivity.class));
     }
 }
