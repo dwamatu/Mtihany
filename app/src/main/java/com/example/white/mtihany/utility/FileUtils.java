@@ -17,6 +17,8 @@ import eu.medsea.mimeutil.MimeUtil;
 
 
 public class FileUtils {
+
+
     public static final String[] videoTypes = {
             "video/mp4",
             "video/m4v"
@@ -84,6 +86,7 @@ public class FileUtils {
             genericFileType = "word";
         } else if (fileType.contains("pdf")) {
             genericFileType = "pdf";
+
         } else {
             genericFileType = "generic";
         }

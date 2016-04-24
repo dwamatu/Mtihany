@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.white.mtihany.R;
 import com.example.white.mtihany.data.CardViewDataAdapter;
+import com.example.white.mtihany.data.Courses;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     //FTP
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
     final FTPClient ftp = new FTPClient();
+    public ArrayList<String> courseD = new ArrayList<>();
     int fl = 0;
     boolean status = false;
     FTPFile[] filesList = null;
@@ -50,8 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private List<Courses> coursesList;
     private Button btnSelection;
     private ProgressDialog dialog;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,19 +96,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String data = "";
+
                 List<Courses> Cs = ((CardViewDataAdapter) mAdapter)
                         .getCourseList();
-
+                courseD.clear();
                 for (int i = 0; i < Cs.size(); i++) {
                     Courses singleCourses = Cs.get(i);
                     if (singleCourses.isSelected() == true) {
 
                         data = data + "\n" + singleCourses.getName().toString();
+
+                        if (courseD.size() > 0) {
+
+                            courseD.add(singleCourses.getName().toString());
+                        } else {
+                            courseD.add(singleCourses.getName().toString());
+
+                        }
+
                         /*
 						 * Toast.makeText( CardViewActivity.this, " " +
 						 * singleCourses.getName() + " " +
-						 * singleCourses.getEmailId() + " " +
-						 * singleCourses.isSelected(),
 						 * Toast.LENGTH_SHORT).show();
 						 */
                     }
@@ -116,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 Toast.makeText(MainActivity.this,
-                        "Selected Students: \n" + data, Toast.LENGTH_LONG)
+                        "Selected Students: \n" + courseD, Toast.LENGTH_LONG)
                         .show();
             }
         });
@@ -142,18 +150,38 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected String doInBackground(String... params) {
-
-                //  String folder=(course.getCode()+":"+course.getCourse().toString()).toUpperCase();
+                String folder = String.valueOf(courseD.toString()).toUpperCase();
                 File root = android.os.Environment.getExternalStorageDirectory();
 
                 File dir = new File(root.getAbsolutePath() + "/mtihany/documents"); //it is my root directory
 
-                //File cur = new File (dir.getAbsolutePath() + "/"+folder+"/"); // it is my sub folder directory .. it can vary..
+                File cur = new File(dir.getAbsolutePath() + "/" + folder + "/"); // it is my sub folder directory .. it can vary..
 
                 try {
-                    if (dir.exists() == false)
+                    if (dir.exists() == false) {
 
                         dir.mkdirs();
+                        mProgressDialog.setTitle("Downloading " + courseD.toString());
+                        mProgressDialog.setMessage("Creating Required Directories..");
+                    } else {
+                        mProgressDialog.setTitle("Updating " + courseD.toString());
+                        mProgressDialog.setMessage("Please Wait..");
+                    }
+                   /* if(cur.exists()==false)
+                    {
+                        cur.mkdirs();
+                        mProgressDialog.setTitle("Downloading "+courseD.toString());
+                        mProgressDialog.setMessage("Creating Required Directories..");
+
+
+                    }
+                    else{
+                        mProgressDialog.setTitle("Updating "+courseD.toString());
+                        mProgressDialog.setMessage("Please Wait..");
+
+
+
+                    }*/
 
 
                     ftp.connect(InetAddress.getByName("kimeumana.freevar.com"));
@@ -163,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
 //To change directory of FTP Server
 
                     //ftp.changeWorkingDirectory("");
-                    filesList = ftp.listFiles("/mtihany");
+                    filesList = ftp.listFiles(String.valueOf(courseD));
                     ftp.setFileType(FTP.BINARY_FILE_TYPE);
                     ftp.setBufferSize(102400);
                     while (fl < filesList.length) {
