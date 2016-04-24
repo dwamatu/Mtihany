@@ -33,5 +33,6 @@
     <color name="dark_divider">#32000000</color>
     <color name="divider">#B6B6B6</color>
     <color name="black">#000000</color>
+    <color name="TextPrimaryColor">#FFFFFF</color>
 
 </resources>
