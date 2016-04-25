@@ -45,7 +45,6 @@ public class BaseActivity extends AppCompatActivity {
 
 
     }
-
     public boolean delete(MenuItem item) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("You cannot delete " +

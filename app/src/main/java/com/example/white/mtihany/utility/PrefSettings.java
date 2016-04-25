@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 
 public class PrefSettings {
     /**
-     * Boolean indicating whether ToS has been accepted.
+     * Boolean indicating whether Button has been accepted.
      */
     public static final String NEXT_PRESSED = "next_status";
 

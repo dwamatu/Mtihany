@@ -33,6 +33,10 @@
 
     </style>
 
+    <style name="CheckBox">
+        <item name="android:background">@drawable/checkbox_color_light</item>
+    </style>
+
     <style name="EditTextDark" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">@android:color/white</item>
     </style>

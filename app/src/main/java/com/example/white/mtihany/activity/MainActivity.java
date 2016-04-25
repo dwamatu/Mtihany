@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
     final FTPClient ftp = new FTPClient();
     public ArrayList<String> courseD = new ArrayList<>();
+    public String data = new String();
     int fl = 0;
     boolean status = false;
     FTPFile[] filesList = null;
@@ -124,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 Toast.makeText(MainActivity.this,
-                        "Selected Students: \n" + courseD, Toast.LENGTH_LONG)
+                        "Selected Students: \n" + String.valueOf(data), Toast.LENGTH_LONG)
                         .show();
             }
         });
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected String doInBackground(String... params) {
-                String folder = String.valueOf(courseD.toString()).toUpperCase();
+                String folder = String.valueOf(courseD.toString());
                 File root = android.os.Environment.getExternalStorageDirectory();
 
                 File dir = new File(root.getAbsolutePath() + "/mtihany/documents"); //it is my root directory
@@ -161,10 +162,10 @@ public class MainActivity extends AppCompatActivity {
                     if (dir.exists() == false) {
 
                         dir.mkdirs();
-                        mProgressDialog.setTitle("Downloading " + courseD.toString());
+                        mProgressDialog.setTitle("Downloading " + String.valueOf(courseD));
                         mProgressDialog.setMessage("Creating Required Directories..");
                     } else {
-                        mProgressDialog.setTitle("Updating " + courseD.toString());
+                        mProgressDialog.setTitle("Updating " + String.valueOf(data));
                         mProgressDialog.setMessage("Please Wait..");
                     }
                    /* if(cur.exists()==false)
@@ -190,8 +191,8 @@ public class MainActivity extends AppCompatActivity {
                     ftp.enterLocalPassiveMode();
 //To change directory of FTP Server
 
-                    //ftp.changeWorkingDirectory("");
-                    filesList = ftp.listFiles(String.valueOf(courseD));
+                    //ftp.changeWorkingDirectory(("mtihany/"+data+"/"));
+                    filesList = ftp.listFiles(String.valueOf(data) + "/");
                     ftp.setFileType(FTP.BINARY_FILE_TYPE);
                     ftp.setBufferSize(102400);
                     while (fl < filesList.length) {
@@ -206,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
                                 status = ftp.retrieveFile(filesList[fl].getName().toString(), desFileStream);
 
                                 mProgressDialog.setMessage("Downloading " + filesList[fl].getName().toString());
-                                //mProgressDialog.setTitle("Downloading "+course.getCourse()+" By "+course.getLec());
+                                mProgressDialog.setTitle("Downloading " + String.valueOf(courseD));
 
                                 desFileStream.flush();
 
@@ -267,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
         }
         new Des().execute();
         Toast.makeText(getApplicationContext(), "Download is Pressed", Toast.LENGTH_LONG).show();
+
         startActivity( new Intent(this, BaseActivity.class));
     }
 
