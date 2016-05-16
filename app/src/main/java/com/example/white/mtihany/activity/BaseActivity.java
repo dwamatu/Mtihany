@@ -1,61 +1,29 @@
 package com.example.white.mtihany.activity;
 
-
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.white.mtihany.R;
 import com.example.white.mtihany.fragments.DocumentFragment;
 
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.net.InetAddress;
-import java.util.ArrayList;
-
 import butterknife.ButterKnife;
 
-
-public class BaseActivity extends AppCompatActivity {
-    public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
-    final FTPClient ftp = new FTPClient();
-    public ArrayList<String> courseD = new ArrayList<>();
-    public String data = new String();
-    int fl = 0;
-    boolean status = false;
-    FTPFile[] filesList = null;
-    ProgressDialog mProgressDialog;
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_base, menu);
-        return super.onCreateOptionsMenu(menu);
-
-    }
-
+public class BaseActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,156 +37,98 @@ public class BaseActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         ButterKnife.bind(this);
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+            }
+        });
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
-    public boolean delete(MenuItem item) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("You cannot delete " +
-                "Kamau Wamatu")
-                .setNegativeButton("okay", null)
-                .create()
-                .show();
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.base, menu);
         return true;
-
     }
 
-    public void Download(MenuItem item) {
-        final class Des extends AsyncTask<String, String, String> {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                mProgressDialog = new ProgressDialog(BaseActivity.this);
-                mProgressDialog.setTitle("Downloading ");
-                mProgressDialog.setMessage("Creating Required Directories..");
-                mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                mProgressDialog.setCancelable(true);
-                mProgressDialog.show();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
 
+        return super.onOptionsItemSelected(item);
+    }
 
-            }
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
 
-            @Override
-            protected String doInBackground(String... params) {
-                String folder = String.valueOf(courseD.toString());
-                File root = android.os.Environment.getExternalStorageDirectory();
+        if (id == R.id.nav_about) {
+            // Handle the camera action
+            showAbout();
+        } else if (id == R.id.nav_share) {
 
-                File dir = new File(root.getAbsolutePath() + "/mtihany/documents"); //it is my root directory
-
-                File cur = new File(dir.getAbsolutePath() + "/" + folder + "/"); // it is my sub folder directory .. it can vary..
-
-                try {
-                    if (dir.exists() == false) {
-
-                        dir.mkdirs();
-                        mProgressDialog.setTitle("Downloading " + String.valueOf(courseD));
-                        mProgressDialog.setMessage("Creating Required Directories..");
-                    } else {
-                        mProgressDialog.setTitle("Updating " + String.valueOf(data));
-                        mProgressDialog.setMessage("Please Wait..");
-                    }
-                   /* if(cur.exists()==false)
-                    {
-                        cur.mkdirs();
-                        mProgressDialog.setTitle("Downloading "+courseD.toString());
-                        mProgressDialog.setMessage("Creating Required Directories..");
-
-
-                    }
-                    else{
-                        mProgressDialog.setTitle("Updating "+courseD.toString());
-                        mProgressDialog.setMessage("Please Wait..");
-
-
-
-                    }*/
-
-
-                    ftp.connect(InetAddress.getByName("kimeumana.freevar.com"));
-//FTP username and password authentication
-                    ftp.login("kimeumana.freevar.com", "Melt348");
-                    ftp.enterLocalPassiveMode();
-//To change directory of FTP Server
-
-                    ftp.changeWorkingDirectory((String.valueOf(data)+"/"));
-                    filesList = ftp.listFiles("/mtihany/"+String.valueOf(data)+ "/");
-                    ftp.setFileType(FTP.BINARY_FILE_TYPE);
-                    ftp.setBufferSize(102400);
-                    while (fl < filesList.length) {
-                        try {
-                            Log.v("File name", filesList[fl].getName());
-
-                            try {
-
-                                FileOutputStream desFileStream = new FileOutputStream(dir + File.separator + filesList[fl].getName().toString());
-
-
-                                status = ftp.retrieveFile(filesList[fl].getName().toString(), desFileStream);
-
-                                mProgressDialog.setMessage("Downloading " + filesList[fl].getName().toString());
-                                mProgressDialog.setTitle("Downloading " + String.valueOf(courseD));
-
-                                desFileStream.flush();
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        fl++;
-
-                    }
-
-                    ftp.logout();
-                    ftp.disconnect();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                return null;
-            }
-
-            @SuppressLint("NewApi")
-            @Override
-
-            protected void onPostExecute(String result) {
-                if (status == true) {
-                    mProgressDialog.setMessage("Downloaded All Files");
-                    mProgressDialog.setTitle("Success");
-
-                    Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    Intent intent = new Intent(BaseActivity.this, BaseActivity.class);
-                    PendingIntent pIntent = PendingIntent.getActivity(BaseActivity.this, 0, intent, 0);
-
-                    Notification noti = new Notification.Builder(BaseActivity.this)
-                            .setContentTitle("Downloaded ")
-                            .setContentText("")
-                            .setSound(uri)
-                            .setAutoCancel(true)
-                            .setContentIntent(pIntent)
-                            .build();
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                    // hide the notification after its selected
-                    notificationManager.notify(0, noti);
-
-
-                    // Intent i = new Intent(MainActivity.this, MainCourseList.class);
-                    // startActivity(i);
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "Download is Incomplete\nCheck your Network Connetion", 1).show();
-                }
-                mProgressDialog.dismiss();
-
-            }
-
+        } else if (id == R.id.nav_send) {
 
         }
-        new Des().execute();
-        Toast.makeText(getApplicationContext(), "Download is Pressed", Toast.LENGTH_LONG).show();
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    protected void showAbout() {
+        // Inflate the about message contents
+        View messageView = getLayoutInflater().inflate(R.layout.about, null, false);
+
+        // When linking text, force to always use default color. This works
+        // around a pressed color state bug.
+        TextView textView = (TextView) messageView.findViewById(R.id.about_credits);
+        int defaultColor = textView.getTextColors().getDefaultColor();
+        textView.setTextColor(defaultColor);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.app_icon);
+        builder.setTitle(R.string.app_name);
+        builder.setView(messageView);
+        builder.create();
+        builder.show();
     }
 }

@@ -31,6 +31,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.3.0'
     compile 'eu.medsea.mimeutil:mime-util:2.1.1'
     compile 'org.apache:apache:17'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'org.apache.ant:ant-commons-net:1.9.6'
 
 }

@@ -16,4 +16,20 @@
         <item>/documents</item>
         <item>/images</item>
     </string-array>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="app_descrip"> Mtihany provides you with the means to access various examination material, Course Work, Projects, Cats and Exams with ease.
+No need to struggle with hard physical copies and misplaced papers anymore.
+Mtihany will help you access this various materials stated above with a click of a button.
+     </string>
+    <string name="key_features">Key Features Include</string>
+    <string name="file_management">1. File management, deletion and insertion </string>
+    <string name="download_files">2. Downloading files.</string>
+    <string name="pdf_viewing"> 3.	Pdf viewing</string>
+    <string name="word_viewing">4.	Word document viewing. </string>
+    <string name="sharing">5.	Sharing. </string>
+
+
+    <string name="app_credits">Wamatu</string>
 </resources>
