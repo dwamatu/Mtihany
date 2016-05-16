@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
     final FTPClient ftp = new FTPClient();
     public ArrayList<String> courseD = new ArrayList<>();
     public String data = new String();
-    int fl = 0;
     public boolean downloadStatus=false;
+    int fl = 0;
     boolean status = false;
     FTPFile[] filesList = null;
     ProgressDialog mProgressDialog;
@@ -142,7 +142,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void Base (View view){
 
-               startActivity( new Intent(this, BaseActivity.class));
+        startActivity(new Intent(this, BaseActivity.class));
+
     }
 
     final class Des extends AsyncTask<String, String, String> {

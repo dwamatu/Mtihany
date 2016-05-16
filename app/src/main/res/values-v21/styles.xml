@@ -12,4 +12,20 @@
         <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
+    <style name="CustomCheckBox">
+        <item name="android:theme">@style/CheckBoxAppTheme</item>
+    </style>
+
+    <style name="CheckBoxAppTheme">
+        <item name="android:colorAccent">
+            @color/accent
+        </item>
+        <item name="android:colorControlNormal">
+            @color/theme_primary
+        </item>
+        <item name="android:colorControlHighlight">
+            @color/theme_dark_primary
+        </item>
+    </style>
+
 </resources>

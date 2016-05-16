@@ -23,7 +23,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
 
 
-        /*if (!PrefSettings.isPressed(getApplicationContext())) {
+   /*     if (!PrefSettings.isPressed(getApplicationContext())) {
             Intent intent = new Intent(this, BaseActivity.class);
             startActivity(intent);
             finish();

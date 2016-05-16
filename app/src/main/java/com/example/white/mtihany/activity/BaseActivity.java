@@ -44,11 +44,8 @@ public class BaseActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
-                sendIntent.setType("text/plain");
-                startActivity(sendIntent);
+                shareAbout();
+
             }
         });
 
@@ -88,7 +85,8 @@ public class BaseActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+
+            startActivity(new Intent(this, SettingsActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
@@ -99,13 +97,15 @@ public class BaseActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_about) {
-            // Handle the camera action
+        if (id == R.id.nav_home) {
+            startActivity(new Intent(this, MainActivity.class));
+        } else if (id == R.id.nav_about) {
             showAbout();
         } else if (id == R.id.nav_share) {
+            shareAbout();
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
 
         }
 
@@ -130,5 +130,13 @@ public class BaseActivity extends AppCompatActivity
         builder.setView(messageView);
         builder.create();
         builder.show();
+    }
+
+    protected void shareAbout() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "Why carry papers of go through laborious process to study. Leave the heavy lifting to us");
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
     }
 }
