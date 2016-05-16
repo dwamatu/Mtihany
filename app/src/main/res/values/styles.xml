@@ -11,6 +11,7 @@
         <item name="editTextStyle">@style/EditTextDark</item>
         <item name="android:textColorHint">@android:color/white</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItemDark</item>
+        <item name="android:colorBackground">@color/background_material_light</item>
 
     </style>
 
@@ -59,5 +60,6 @@
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:layout_marginBottom">5dp</item>
     </style>
+
 
 </resources>

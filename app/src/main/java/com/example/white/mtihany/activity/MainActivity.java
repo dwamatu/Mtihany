@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<String> courseD = new ArrayList<>();
     public String data = new String();
     int fl = 0;
+    public boolean downloadStatus=false;
     boolean status = false;
     FTPFile[] filesList = null;
     ProgressDialog mProgressDialog;
@@ -124,6 +125,13 @@ public class MainActivity extends AppCompatActivity {
 
                 }
 
+                    for (int j=0;j<courseD.size();j++){
+                        new Des().execute(courseD.get(j).toString());
+
+                    }
+
+                
+
                 Toast.makeText(MainActivity.this,
                         "Selected Students: \n" + String.valueOf(data), Toast.LENGTH_LONG)
                         .show();
@@ -134,40 +142,45 @@ public class MainActivity extends AppCompatActivity {
 
     public void Base (View view){
 
-        final class Des extends AsyncTask<String, String, String> {
+               startActivity( new Intent(this, BaseActivity.class));
+    }
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                mProgressDialog = new ProgressDialog(MainActivity.this);
-                mProgressDialog.setTitle("Downloading ");
-                mProgressDialog.setMessage("Creating Required Directories..");
-                mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                mProgressDialog.setCancelable(true);
-                mProgressDialog.show();
+    final class Des extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+            mProgressDialog = new ProgressDialog(MainActivity.this);
+            mProgressDialog.setTitle("Downloading ");
+            mProgressDialog.setMessage("Creating Required Directories..");
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            mProgressDialog.setCancelable(true);
+            mProgressDialog.show();
 
 
-            }
+        }
 
-            @Override
-            protected String doInBackground(String... params) {
-                String folder = String.valueOf(courseD.toString());
-                File root = android.os.Environment.getExternalStorageDirectory();
+        @Override
+        protected String doInBackground(String... params) {
+            String folder = String.valueOf(courseD.toString());
+            String course=params[0];
+            File root = android.os.Environment.getExternalStorageDirectory();
 
-                File dir = new File(root.getAbsolutePath() + "/mtihany/documents"); //it is my root directory
+            File dir = new File(root.getAbsolutePath() + "/mtihany/documents"); //it is my root directory
 
-                File cur = new File(dir.getAbsolutePath() + "/" + folder + "/"); // it is my sub folder directory .. it can vary..
+            File cur = new File(dir.getAbsolutePath() + "/" + folder + "/"); // it is my sub folder directory .. it can vary..
 
-                try {
-                    if (dir.exists() == false) {
+            try {
+                if (dir.exists() == false) {
 
-                        dir.mkdirs();
-                        mProgressDialog.setTitle("Downloading " + String.valueOf(courseD));
-                        mProgressDialog.setMessage("Creating Required Directories..");
-                    } else {
-                        mProgressDialog.setTitle("Updating " + String.valueOf(data));
-                        mProgressDialog.setMessage("Please Wait..");
-                    }
+                    dir.mkdirs();
+                    mProgressDialog.setTitle("Downloading " + String.valueOf(courseD));
+                    mProgressDialog.setMessage("Creating Required Directories..");
+                } else {
+                    mProgressDialog.setTitle("Updating " + String.valueOf(data));
+                    mProgressDialog.setMessage("Please Wait..");
+                }
                    /* if(cur.exists()==false)
                     {
                         cur.mkdirs();
@@ -185,91 +198,87 @@ public class MainActivity extends AppCompatActivity {
                     }*/
 
 
-                    ftp.connect(InetAddress.getByName("kimeumana.freevar.com"));
+                ftp.connect(InetAddress.getByName("kimeumana.freevar.com"));
 //FTP username and password authentication
-                    ftp.login("kimeumana.freevar.com", "Melt348");
-                    ftp.enterLocalPassiveMode();
+                ftp.login("kimeumana.freevar.com", "Melt348");
+                ftp.enterLocalPassiveMode();
 //To change directory of FTP Server
 
-                    //ftp.changeWorkingDirectory(("mtihany/"+data+"/"));
-                    filesList = ftp.listFiles(String.valueOf(data) + "/");
-                    ftp.setFileType(FTP.BINARY_FILE_TYPE);
-                    ftp.setBufferSize(102400);
-                    while (fl < filesList.length) {
+                ftp.changeWorkingDirectory("/mtihany/"+course+"/");
+                filesList = ftp.listFiles("");
+                ftp.setFileType(FTP.BINARY_FILE_TYPE);
+                ftp.setBufferSize(102400);
+                while (fl < filesList.length) {
+                    try {
+                        Log.v("File name", filesList[fl].getName());
+
                         try {
-                            Log.v("File name", filesList[fl].getName());
 
-                            try {
-
-                                FileOutputStream desFileStream = new FileOutputStream(dir + File.separator + filesList[fl].getName().toString());
+                            FileOutputStream desFileStream = new FileOutputStream(dir + File.separator + filesList[fl].getName().toString());
 
 
-                                status = ftp.retrieveFile(filesList[fl].getName().toString(), desFileStream);
+                            status = ftp.retrieveFile(filesList[fl].getName().toString(), desFileStream);
 
-                                mProgressDialog.setMessage("Downloading " + filesList[fl].getName().toString());
-                                mProgressDialog.setTitle("Downloading " + String.valueOf(courseD));
+                            mProgressDialog.setMessage("Downloading " + filesList[fl].getName().toString());
+                            mProgressDialog.setTitle("Downloading " + String.valueOf(courseD));
 
-                                desFileStream.flush();
+                            desFileStream.flush();
 
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        fl++;
-
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+                    fl++;
 
-                    ftp.logout();
-                    ftp.disconnect();
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
 
-                return null;
+                ftp.logout();
+                ftp.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-            @SuppressLint("NewApi")
-            @Override
+            return null;
+        }
 
-            protected void onPostExecute(String result) {
-                if (status == true) {
-                    mProgressDialog.setMessage("Downloaded All Files");
-                    mProgressDialog.setTitle("Success");
+        @SuppressLint("NewApi")
+        @Override
 
-                    Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    Intent intent = new Intent(MainActivity.this, BaseActivity.class);
-                    PendingIntent pIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+        protected void onPostExecute(String result) {
+            if (status == true) {
+                mProgressDialog.setMessage("Downloaded All Files");
+                mProgressDialog.setTitle("Success");
 
-                    Notification noti = new Notification.Builder(MainActivity.this)
-                            .setContentTitle("Downloaded ")
-                            .setContentText("")
-                            .setSound(uri)
-                            .setAutoCancel(true)
-                            .setContentIntent(pIntent)
-                            .build();
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                    // hide the notification after its selected
-                    notificationManager.notify(0, noti);
+                Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                Intent intent = new Intent(MainActivity.this, BaseActivity.class);
+                PendingIntent pIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+
+                Notification noti = new Notification.Builder(MainActivity.this)
+                        .setContentTitle("Downloaded ")
+                        .setContentText("")
+                        .setSound(uri)
+                        .setAutoCancel(true)
+                        .setContentIntent(pIntent)
+                        .build();
+                NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                // hide the notification after its selected
+                notificationManager.notify(0, noti);
 
 
-                    // Intent i = new Intent(MainActivity.this, MainCourseList.class);
-                    // startActivity(i);
+                // Intent i = new Intent(MainActivity.this, MainCourseList.class);
+                // startActivity(i);
 
-                } else {
-                    Toast.makeText(getApplicationContext(), "Download is Incomplete\nCheck your Network Connetion", 1).show();
-                }
-                mProgressDialog.dismiss();
-
+            } else {
+                Toast.makeText(getApplicationContext(), "Download is Incomplete\nCheck your Network Connetion", 1).show();
             }
-
+            mProgressDialog.dismiss();
+            downloadStatus = true;
 
         }
-        new Des().execute();
-        Toast.makeText(getApplicationContext(), "Download is Pressed", Toast.LENGTH_LONG).show();
 
-        startActivity( new Intent(this, BaseActivity.class));
+
     }
 
 }
